@@ -48,8 +48,18 @@
       display:flex;align-items:center;justify-content:space-between;gap:12px;
       padding:12px 24px;
     }
+    .nav-left{
+      display:flex;align-items:center;gap:12px;
+    }
     .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.3px}
     .brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));box-shadow:0 0 16px rgba(34,211,238,.5)}
+    .last-updated{
+      color:var(--muted);
+      font-size:0.9rem;
+      padding-left:8px;
+      border-left:1px solid rgba(255,255,255,0.03);
+      margin-left:8px;
+    }
     .nav a.button{
       background:linear-gradient(135deg,var(--brand),var(--accent));
       color:#001018;
@@ -278,9 +288,12 @@
 <body>
   <header class="site">
     <div class="nav wrap">
-      <div class="brand">
-        <span class="dot"></span>
-        <span>Cheung Yiu Wa, Jacky</span>
+      <div class="nav-left">
+        <div class="brand">
+          <span class="dot"></span>
+          <span>Cheung Yiu Wa, Jacky</span>
+        </div>
+        <div id="last-updated" class="last-updated" aria-live="polite">Last updated: —</div>
       </div>
       <nav class="links" aria-label="Primary">
         <a class="button" href="#contact">Contact</a>
@@ -493,7 +506,7 @@
                 </div>
                 <div class="progress-labels">
                   <span>0</span>
-                  <span>&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 90 credits</span>
+                  <span>&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160&#160 90 credits</span>
                   <span>120 credits</span>
                 </div>
               </div>
@@ -705,6 +718,24 @@
   <script>
     // Update footer year
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Fill Last updated: prefer document.lastModified (from server), fallback to current date
+    (function(){
+      function formatDate(d){
+        if(!d) return '—';
+        const opts = { year:'numeric', month:'short', day:'numeric' };
+        return d.toLocaleDateString(undefined, opts);
+      }
+      let lm = document.lastModified;
+      let date;
+      if (lm && lm !== '' && lm !== '01/01/1970 00:00:00') {
+        date = new Date(lm);
+        if (isNaN(date)) date = new Date(); // fallback
+      } else {
+        date = new Date();
+      }
+      document.getElementById('last-updated').textContent = 'Last updated: ' + formatDate(date);
+    })();
   </script>
 </body>
 </html>
